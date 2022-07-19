@@ -122,9 +122,15 @@ def dump_yaml(data, filename, method="w", encoding="utf-8", safe_mode=False, **k
 
 
 def load_json(filename, method="r", **kwargs):
-    with open(filename, method) as f:
-        data = json.load(f, **kwargs)
-
+    if method == "r":
+        with open(filename, method) as f:
+            data = json.load(f, **kwargs)
+    elif method == "rb":
+        decode_method = kwargs.get("encoding", None)
+        with open(filename, method) as f:
+            data = f.read()
+            if decode_method is not None:
+                data = data.decode(decode_method)
     return data
 
 
