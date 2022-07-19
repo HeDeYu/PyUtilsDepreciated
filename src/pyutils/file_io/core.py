@@ -131,6 +131,7 @@ def load_json(filename, method="r", **kwargs):
             data = f.read()
             if decode_method is not None:
                 data = data.decode(decode_method)
+                data = json.loads(data)
     return data
 
 
