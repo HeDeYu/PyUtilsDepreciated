@@ -4,8 +4,58 @@
 # @Time     :2022/7/20 10:15
 
 __all__ = [
+    "check_attr_in_list",
     "check_isinstance",
 ]
+
+
+def check_attr_in_list(
+    attr_name: str, valid_values, *, _print_supported_values=True, **kwargs
+):
+    """
+
+    For each *key, value* pair in *kwargs*, check the attribute *value*.*attr_name* is valid
+
+    Args:
+        attr_name(str): name of the attribute to be checked.
+        valid_values: list
+            Sequence of valid values of *attr_name*.
+        _print_supported_values : bool, default: True
+            Whether to print *_values* when raising ValueError.
+
+        **kwargs : dict
+            *key, value* pairs as keyword arguments to find in *_values*.
+
+    Raises:
+        ValueError: If the attributes of any *value* in *kwargs* checking failed
+
+    Examples:
+        >>> check_attr_in_list('arrti_name', valid_values=[v1], test_1=test_1, test_2=test_2)
+        >>> check_attr_in_list('arrti_name', valid_values=[v1, v2], test_1=test_1, test_2=test_2)
+
+    """
+
+    item_value_strs = list(map(str, valid_values))
+    if len(item_value_strs) > 1:
+        valid_str = ", ".join(item_value_strs[:-1]) + " or " + item_value_strs[-1]
+    else:
+        valid_str = item_value_strs[0]
+
+    for arg_k, arg_v in kwargs.items():
+        attr_value = getattr(arg_v, attr_name)
+
+        if attr_value not in valid_values:
+
+            if _print_supported_values:
+                raise ValueError(
+                    f"expect attribute {attr_name} to be {valid_str}, "
+                    f"while the {attr_name} of {arg_k!r} is {attr_value}"
+                )
+
+            else:
+                raise ValueError(
+                    f"attribute value {attr_value} of {arg_k!r} is not valid"
+                )
 
 
 def check_isinstance(_types, **kwargs):
