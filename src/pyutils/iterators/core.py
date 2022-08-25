@@ -4,7 +4,6 @@
 # @Time     :2022/8/25 8:49
 
 import copy
-import itertools
 import random
 from collections.abc import Iterable
 
@@ -15,27 +14,34 @@ __all__ = [
 
 def make_cycle_iterator(it, shuffle=True):
     assert isinstance(it, Iterable)
-    if not shuffle:
-        yield itertools.cycle(it)
+    it = list(it)
     it_ = copy.deepcopy(it)
-    random.shuffle(it_)
+    if shuffle:
+        random.shuffle(it_)
     it_ = iter(it_)
     while True:
         try:
             yield next(it_)
         except StopIteration:
             it_ = copy.deepcopy(it)
-            random.shuffle(it_)
+            if shuffle:
+                random.shuffle(it_)
             it_ = iter(it_)
 
 
-#
-# a = [1,2,3,4,5]
+# from loguru import logger
+# a = range(5)
 # count_max = 15
 # count = 0
-# # for x in make_cycle_iterator(a, shuffle=False):
-# for x in itertools.cycle(a):
-#     print(x)
+# for x in make_cycle_iterator(list(a)):
+#     logger.debug(x)
+#     count += 1
+#     if count == count_max:
+#         break
+# logger.info("================================")
+# count = 0
+# for x in make_cycle_iterator(range(5)):
+#     logger.debug(x)
 #     count += 1
 #     if count == count_max:
 #         break
