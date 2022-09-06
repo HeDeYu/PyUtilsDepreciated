@@ -7,6 +7,7 @@ __all__ = [
     "check_attr_in_list",
     "check_isinstance",
     "check_in_list",
+    "make_list",
 ]
 
 
@@ -133,3 +134,9 @@ def check_isinstance(_types, **kwargs):
                     type_name(type(v)),
                 )
             )
+
+
+def make_list(input):
+    if not isinstance(input, (list, tuple)):
+        return [input]
+    return input
